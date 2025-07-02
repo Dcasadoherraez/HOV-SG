@@ -73,7 +73,7 @@ def mean_accuracy(eval_segm, gt_segm, ignore=[]):
     return mean_accuracy_
 
 
-def per_class_iou(eval_segm, gt_segm, ignore=[]):
+def per_class_iou(eval_segm, gt_segm, ignore=[], classes=None):
     """
     for each class, compute
     n_ii / (t_i + sum_j(n_ji) - n_ii)
@@ -90,7 +90,10 @@ def per_class_iou(eval_segm, gt_segm, ignore=[]):
     overlap, n_overlap = get_ignore_classes_num(gt_cl, ignore)
     eval_mask, gt_mask = extract_both_masks(eval_segm, gt_segm, cl, n_cl)
 
-    iou = list([0]) * n_cl
+    if classes is not None:
+        iou = list([np.nan] * len(classes))
+    else:
+        iou = list([0]) * n_cl
 
     for i, c in enumerate(cl):
         if c in ignore:
@@ -105,7 +108,13 @@ def per_class_iou(eval_segm, gt_segm, ignore=[]):
         t_i = np.sum(curr_gt_mask)
         n_ij = np.sum(curr_eval_mask)
 
-        iou[i] = n_ii / (t_i + n_ij - n_ii)
+        iou_result = n_ii / (t_i + n_ij - n_ii)
+        if classes is not None:
+            iou[int(c)] = iou_result
+        else:
+            iou[i] = iou_result
+            
+        print("IoU for class {}: {}".format(classes[int(c)], iou_result))
 
     # mean_iou_ = np.sum(iou) / (n_cl_gt - n_overlap)
     return iou

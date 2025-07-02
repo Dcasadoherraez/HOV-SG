@@ -1,5 +1,21 @@
 """Label file for different datasets."""
 
+TRUCKSCENES_LABELS = (
+    'animal', 
+    'barrier', 
+    'bicycle', 
+    'bus', 
+    'car', 
+    'motorcycle', 
+    'construction vehicle', 
+    'person', 
+    'traffic cone',
+    'traffic sign', 
+    'trailer', 
+    'truck', 
+    'other'
+)
+
 SCANNET_LABELS_20 = (
     "wall",
     "floor",
@@ -722,6 +738,22 @@ MAPPING_NUSCENES_DETAILS = (
     15,
 )
 
+
+TRUCKSCENES_COLORMAP = {
+    0: (220, 220, 0), # 'animal', 
+    1: (119, 11, 32), # 'barrier', 
+    2: (119, 11, 32), # 'bicycle', 
+    3: (0, 60, 100), # 'bus', 
+    4: (0, 0, 250), # 'car', 
+    5: (0, 0, 230), # 'motorcycle', 
+    6: (230, 230, 250), # 'construction vehicle', 
+    7: (220, 20, 60), # 'person', 
+    8: (250, 170, 30), # 'traffic cone',
+    9: (0, 0, 110), # 'traffic sign', 
+    10: (200, 150, 0),  # 'trailer', 
+    11: (0, 0, 110), # 'truck', 
+    12: (0, 0, 0), # 'other'
+}
 
 NUSCENES16_COLORMAP = {
     1: (220, 220, 0),  # barrier

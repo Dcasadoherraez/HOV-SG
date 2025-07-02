@@ -37,6 +37,7 @@ from hovsg.graph.floor import Floor
 from hovsg.dataloader.hm3dsem import HM3DSemDataset
 from hovsg.dataloader.scannet import ScannetDataset
 from hovsg.dataloader.replica import ReplicaDataset
+from hovsg.dataloader.truckscenes import TruckScenesDataset
 
 from hovsg.utils.clip_utils import get_img_feats, get_text_feats_multiple_templates
 from hovsg.models.sam_clip_feats_extractor import extract_feats_per_pixel
@@ -61,7 +62,8 @@ from hovsg.utils.llm_utils import (
 )
 
 # pylint: disable=all
-
+from concurrent.futures import ThreadPoolExecutor
+from tqdm import tqdm
 
 class Graph:
     """
@@ -135,6 +137,8 @@ class Graph:
             self.dataset = ScannetDataset(dataset_cfg)
         elif self.cfg.main.dataset == "replica":
             self.dataset = ReplicaDataset(dataset_cfg)
+        elif self.cfg.main.dataset == "truckscenes":
+            self.dataset = TruckScenesDataset(dataset_cfg)
         else:
             print("Dataset not supported")
             return
@@ -235,8 +239,9 @@ class Graph:
 
         # remove any small pcds
         for i, pcd in enumerate(self.mask_pcds):
-            if pcd.is_empty() or len(pcd.points) < 100:
+            if pcd.is_empty() or len(pcd.points) < self.cfg.pipeline.min_pcd_points:
                 self.mask_pcds.pop(i)
+                
         # fuse point features in every 3d mask
         masks_feats = []
         for i, mask_3d in tqdm(enumerate(self.mask_pcds), desc="Fusing features"):

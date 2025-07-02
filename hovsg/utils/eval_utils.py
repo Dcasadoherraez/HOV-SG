@@ -274,7 +274,7 @@ def sim_2_label(similarity, labels_id):
     """
     # find the label index with the highest similarity
     label_indices = similarity.argmax(axis=1)
-    print("label_indices: ", label_indices)
+
     # convert label indices to label names
     labels = np.array([labels_id[i] for i in label_indices])
     return labels

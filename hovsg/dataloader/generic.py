@@ -143,6 +143,9 @@ class RGBDDataset(Dataset, ABC):
         Returns:
             list of 3D masks as Open3D point clouds
         """
+        if filter_distance == -1:
+            filter_distance = np.inf
+            
         camera_matrix = self.depth_intrinsics
         depth_scale = self.scale
         pcd_list = []
@@ -164,5 +167,10 @@ class RGBDDataset(Dataset, ABC):
             colors = colors[indices]
             pcd_mask.colors = o3d.utility.Vector3dVector(colors)
             pcd_mask = pcd_mask.voxel_down_sample(voxel_size=down_size)
+            
+            if np.array(pcd_mask.points).shape[0] == 0:
+                continue
+
             pcd_list.append(pcd_mask)
+            
         return pcd_list
